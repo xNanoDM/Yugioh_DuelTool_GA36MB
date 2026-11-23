@@ -1,0 +1,42 @@
+name: Build ygo_calc (armhf)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-armhf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install armhf toolchain and SDL2 dev
+        run: |
+          sudo dpkg --add-architecture armhf
+          sudo apt-get update
+          sudo apt-get install -y g++-arm-linux-gnueabihf libsdl2-dev:armhf
+
+      - name: Compile binary for GA36-MB (Allwinner A33)
+        run: |
+          arm-linux-gnueabihf-g++ -O2 -std=c++17 \
+            -mcpu=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard \
+            -I/usr/include/SDL2 \
+            src/main.cpp -o ygo_calc \
+            -L/usr/lib/arm-linux-gnueabihf \
+            -Wl,-rpath-link,/usr/lib/arm-linux-gnueabihf \
+            -lSDL2
+
+      - name: Package release folder
+        run: |
+          mkdir -p dist/ygo_calc
+          cp ygo_calc run.sh README.txt dist/ygo_calc/
+          chmod +x dist/ygo_calc/run.sh dist/ygo_calc/ygo_calc
+          cd dist && zip -r ../ygo_calc-armhf.zip ygo_calc
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ygo_calc-armhf
+          path: ygo_calc-armhf.zip
