@@ -75,8 +75,10 @@ else
 
 DEPENDS	:=	$(OFILES:.o=.d)
 
+ARM7_ELF := $(shell find /opt/devkitpro -name "*arm7*.elf" -o -name "default.elf" 2>/dev/null | head -n 1)
+
 $(OUTPUT).nds	:	$(OUTPUT).elf
-	ndstool -c $@ -9 $<
+	ndstool -c $@ -9 $< -7 $(ARM7_ELF)
 
 $(OUTPUT).elf	:	$(OFILES)
 
