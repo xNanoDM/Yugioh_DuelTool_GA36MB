@@ -1,0 +1,26 @@
+name: Build Yu-Gi-Oh! Calc NDS
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-nds:
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkitarm:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Compile .nds ROM
+        run: make
+
+      - name: Upload .nds artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ygo_calc_nds
+          path: ygo_calc.nds
