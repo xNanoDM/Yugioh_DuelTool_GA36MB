@@ -1,0 +1,2 @@
+Coloca aquí `libSDL2-2.0.so.0` compilada para la arquitectura ARM de tu consola
+(puedes extraerla de `/usr/lib/` de la consola o ejecutar `make bundle-libs` tras compilar).
