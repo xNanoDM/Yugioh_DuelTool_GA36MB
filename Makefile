@@ -76,7 +76,7 @@ else
 DEPENDS	:=	$(OFILES:.o=.d)
 
 $(OUTPUT).nds	:	$(OUTPUT).elf
-	ndstool -c $@ -9 $< -b $(DEVKITPRO)/libnds/icon.bmp "Yu-Gi-Oh! Calc;Duel LP Tool;1-6 Players"
+	ndstool -c $@ -9 $<
 
 $(OUTPUT).elf	:	$(OFILES)
 
