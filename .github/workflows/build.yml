@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-armhf:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,15 +15,14 @@ jobs:
       - name: Install armhf toolchain and SDL2 dev
         run: |
           sudo dpkg --add-architecture armhf
-          CODENAME=$(. /etc/os-release && echo "$VERSION_CODENAME")
           sudo sed -i 's/^Types: deb$/Types: deb\nArchitectures: amd64/' /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null || true
           cat <<EOF | sudo tee /etc/apt/sources.list.d/armhf-ports.list
-          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${CODENAME} main universe
-          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${CODENAME}-updates main universe
-          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ ${CODENAME}-security main universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ noble main universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ noble-updates main universe
+          deb [arch=armhf] http://ports.ubuntu.com/ubuntu-ports/ noble-security main universe
           EOF
           sudo apt-get update
-          sudo apt-get install -y g++-arm-linux-gnueabihf libsdl2-dev:armhf
+          sudo apt-get install -y --allow-downgrades g++-arm-linux-gnueabihf libsdl2-dev:armhf
 
       - name: Compile binary for GA36-MB (Allwinner A33)
         run: |
