@@ -1,0 +1,30 @@
+name: Build Yu-Gi-Oh! Calc PSP
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build-psp:
+    runs-on: ubuntu-latest
+    container:
+      image: pspdev/pspdev:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Compile EBOOT.PBP
+        run: |
+          make
+          cp EBOOT.PBP ygo_calc.pbp
+
+      - name: Upload PSP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ygo_calc_psp
+          path: |
+            ygo_calc.pbp
+            EBOOT.PBP
